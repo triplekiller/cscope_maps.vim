@@ -37,12 +37,22 @@ if has("cscope")
     " if you want the reverse search order.
     set csto=0
 
+    set csprg=/usr/bin/cscope
+    set cscopequickfix=c-,d-,e-,f-,g0,i-,s-,t-
+    set nocsverb
+
     " add any cscope database in current directory
     if filereadable("cscope.out")
         cs add cscope.out
     " else add the database pointed to by environment variable
     elseif $CSCOPE_DB != ""
         cs add $CSCOPE_DB
+    else
+        let cscope_file=findfile("cscope.out", ".;")
+        let cscope_pre=matchstr(cscope_file, ".*/")
+        if !empty(cscope_file) && filereadable(cscope_file)
+            exe "cs add" cscope_file cscope_pre
+        endif
     endif
 
     " show msg when any other cscope db added
